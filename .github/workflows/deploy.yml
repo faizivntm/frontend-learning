@@ -29,6 +29,8 @@ jobs:
         env:
           # Situs dilayani di /<nama-repo>/, cocok untuk GitHub Pages project site.
           VITE_BASE: /${{ github.event.repository.name }}/
+          # URL backend. Bukan rahasia (ikut ter-bundle ke frontend) → pakai Variable, bukan Secret.
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
       # Fallback SPA: refresh di /materials dll tidak 404.
       - run: cp dist/index.html dist/404.html
       - uses: actions/configure-pages@v5
