@@ -36,6 +36,17 @@ export function ContentBlocks({ blocks }: { blocks: Block[] }) {
                 <code>{block.code}</code>
               </pre>
             )
+          case 'html':
+            // Konten rich-text dari editor. HTML dibatasi skema TipTap (tanpa <script>),
+            // ditulis hanya oleh admin terautentikasi.
+            // ponytail: cukup untuk single-admin; tambah DOMPurify kalau kontennya jadi multi-author/untrusted.
+            return (
+              <div
+                key={i}
+                className="rich"
+                dangerouslySetInnerHTML={{ __html: block.html }}
+              />
+            )
         }
       })}
     </div>

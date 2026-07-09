@@ -5,14 +5,16 @@ export interface LoginCredentials {
   password: string
 }
 
-// Backend mengembalikan { access_token, token_type }.
+// Backend mengembalikan { access_token, refresh_token, token_type }.
 interface TokenResponse {
   access_token: string
+  refresh_token: string
   token_type: string
 }
 
 export interface LoginResponse {
   token: string
+  refreshToken: string
 }
 
 export default async function loginUser(
@@ -22,5 +24,5 @@ export default async function loginUser(
     method: 'POST',
     body: credentials,
   })
-  return { token: res.access_token }
+  return { token: res.access_token, refreshToken: res.refresh_token }
 }

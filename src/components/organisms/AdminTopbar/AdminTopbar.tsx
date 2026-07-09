@@ -3,14 +3,15 @@ import { useQueryClient } from '@tanstack/react-query'
 import { FaArrowUpRightFromSquare } from 'react-icons/fa6'
 import { Button } from '@/components/atoms/Button'
 import { BoyCodeLogo } from '@/components/atoms/BoyCodeLogo'
+import logoutUser from '@/api/auth/logoutUser'
 
 // Organism: topbar khusus halaman /admin (login tidak memakainya).
 export function AdminTopbar() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const logout = () => {
-    localStorage.removeItem('token')
+  const logout = async () => {
+    await logoutUser() // revoke refresh token di server + bersihkan token lokal
     queryClient.clear()
     navigate({ to: '/admin/login' })
   }

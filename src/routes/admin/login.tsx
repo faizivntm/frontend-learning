@@ -5,6 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { Button } from "@/components/atoms/Button"
 import { BoyCodeLogo } from "@/components/atoms/BoyCodeLogo"
 import loginUser from "@/api/auth/loginUser"
+import { setTokens } from "@/api/auth/tokenStore"
 
 export const Route = createFileRoute('/admin/login')({
     component: Login,
@@ -19,7 +20,7 @@ function Login() {
     const loginMutate = useMutation({
         mutationFn: loginUser,
         onSuccess: (data) => {
-            localStorage.setItem('token', data.token)
+            setTokens(data.token, data.refreshToken)
             // TODO: arahkan ke halaman kelola materi begitu dibuat.
             navigate({ to: '/admin/create_materi' })
         },

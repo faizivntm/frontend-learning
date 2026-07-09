@@ -11,6 +11,7 @@ export type Block =
   | { type: 'paragraph'; text: string }
   | { type: 'list'; items: string[] }
   | { type: 'code'; lang?: string; code: string }
+  | { type: 'html'; html: string } // konten rich-text dari editor ala Medium
 
 export interface Material {
   slug: string // dipakai di URL: /materials/<slug> — huruf kecil, pakai tanda hubung

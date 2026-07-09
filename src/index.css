@@ -143,3 +143,95 @@
   );
   animation: shimmer 1.4s infinite;
 }
+
+/* Rich text — dipakai bersama oleh editor TipTap (.rich di ProseMirror) & hasil
+   render materi, supaya tampilan saat menulis = saat terbit (WYSIWYG). */
+.rich {
+  color: color-mix(in oklab, var(--color-foam) 92%, transparent);
+  line-height: 1.75;
+  word-break: break-word;
+}
+.rich > * + * {
+  margin-top: 1rem;
+}
+.rich h2 {
+  margin-top: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-foam);
+}
+.rich h3 {
+  margin-top: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-foam);
+}
+.rich a {
+  color: var(--color-surf);
+  text-decoration: underline;
+}
+.rich strong {
+  font-weight: 700;
+  color: var(--color-foam);
+}
+.rich em {
+  font-style: italic;
+}
+.rich ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+.rich ol {
+  list-style: decimal;
+  padding-left: 1.5rem;
+}
+.rich li {
+  margin-top: 0.25rem;
+}
+.rich li::marker {
+  color: var(--color-surf);
+}
+.rich blockquote {
+  border-left: 3px solid var(--color-surf);
+  padding-left: 1rem;
+  font-style: italic;
+  color: var(--color-mist);
+}
+.rich code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.875em;
+  background: color-mix(in oklab, var(--color-surf) 14%, transparent);
+  color: var(--color-foam);
+  padding: 0.1em 0.35em;
+  border-radius: 0.35rem;
+}
+.rich pre {
+  overflow-x: auto;
+  border: 1px solid var(--color-line);
+  border-radius: 0.75rem;
+  background: var(--color-abyss);
+  padding: 1rem;
+}
+.rich pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.875rem;
+  color: var(--color-foam);
+}
+.rich hr {
+  border: none;
+  border-top: 1px solid var(--color-line);
+}
+.rich img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+}
+/* Placeholder editor saat kosong (dari @tiptap/extension-placeholder). */
+.rich p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: color-mix(in oklab, var(--color-mist) 65%, transparent);
+}
