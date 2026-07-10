@@ -8,9 +8,15 @@ import { useMaterials } from '@/api/materials/useMaterials'
 import type { Material } from '@/content/materials'
 
 export const Route = createFileRoute('/materials/')({
-  // ?admin=1 → dibuka dari sisi admin (header admin, konteks diteruskan ke detail).
-  validateSearch: (search: Record<string, unknown>): { admin?: boolean } =>
-    search.admin === '1' || search.admin === true ? { admin: true } : {},
+  // ?admin=1 → konteks admin. ?category=… → filter materi per kategori (dari home).
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { admin?: boolean; category?: string } => ({
+    ...(search.admin === '1' || search.admin === true ? { admin: true } : {}),
+    ...(typeof search.category === 'string' && search.category
+      ? { category: search.category }
+      : {}),
+  }),
   component: Materials,
 })
 
@@ -26,23 +32,29 @@ function searchableText(m: Material): string {
 }
 
 function Materials() {
-  const { admin } = Route.useSearch()
+  const { admin, category } = Route.useSearch()
   const { data, isLoading, isError } = useMaterials()
   const [query, setQuery] = useState('')
 
+  // Filter kategori dulu (kalau dipilih dari home), baru pencarian teks.
+  const byCategory = useMemo(
+    () => (data ?? []).filter((m) => !category || m.category === category),
+    [data, category],
+  )
+
   // Precompute indeks teks sekali per data (bukan tiap ketikan).
   const index = useMemo(
-    () => (data ?? []).map((m) => ({ material: m, text: searchableText(m) })),
-    [data],
+    () => byCategory.map((m) => ({ material: m, text: searchableText(m) })),
+    [byCategory],
   )
 
   const items = useMemo(() => {
     const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean)
-    if (!terms.length) return data ?? []
+    if (!terms.length) return byCategory
     return index
       .filter(({ text }) => terms.every((t) => text.includes(t)))
       .map(({ material }) => material)
-  }, [index, query, data])
+  }, [index, query, byCategory])
 
   return (
     <>
@@ -57,9 +69,23 @@ function Materials() {
           </Link>
         )}
       <SectionHeading
-        title="Semua Materi"
-        subtitle="Kalau gue sempat belajar sesuatu, biasanya bakal gue tulis di sini."
+        title={category ?? 'Semua Materi'}
+        subtitle={
+          category
+            ? `Materi dengan kategori "${category}".`
+            : 'Kalau gue sempat belajar sesuatu, biasanya bakal gue tulis di sini.'
+        }
       />
+
+      {category ? <></> : (
+        <Link
+          to="/materials"
+          search={admin ? { admin: true } : {}}
+          className="mt-3 inline-flex items-center gap-1.5 text-sm text-mist hover:text-surf"
+        >
+          <FaArrowLeft className="h-3 w-3" /> Lihat semua kategori
+        </Link>
+      )}
 
       <input
         type="search"
@@ -83,7 +109,9 @@ function Materials() {
         <p className="mt-10 text-mist">
           {(data ?? []).length === 0
             ? 'Belum ada materi di sini—tapi tenang, lagi disiapkan.'
-            : `Nggak ada materi yang cocok sama "${query}". Coba kata kunci lain?`}
+            : query
+              ? `Nggak ada materi yang cocok sama "${query}". Coba kata kunci lain?`
+              : `Belum ada materi di kategori "${category}".`}
         </p>
       ) : (
         <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

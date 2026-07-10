@@ -107,6 +107,7 @@ function Index() {
             <Link
               key={t.name}
               to="/materials"
+              search={{ category: t.name }}
               className="rounded-xl border border-line bg-tide/60 p-6 transition-colors hover:border-surf/50 hover:bg-tide"
             >
               <div className='flex flex-row justify-center items-center gap-3'>
