@@ -36,26 +36,22 @@ const ACTIONS = [
     desc: 'Kanvas menulis ala blog — bersih, mengalir, langsung terbit.',
     Icon: FaPen,
     to: '/admin/materials/new' as const,
-    search: false,
   },
   {
     title: 'Kelola Materi',
     desc: 'Edit atau hapus materi yang sudah terbit.',
     Icon: FaListCheck,
     to: '/materials' as const,
-    search: true,
   },
   {
     title: 'Tambah Project',
     desc: 'Publikasikan template atau repo ke halaman Tools.',
     Icon: FaCode,
-    search: false,
   },
   {
     title: 'Kelola Project',
     desc: 'Perbarui atau hapus project di halaman Tools.',
     Icon: FaFolderOpen,
-    search: false,
   },
 ]
 
@@ -127,7 +123,7 @@ function Dashboard() {
               <Link
                 key={a.title}
                 to={a.to}
-                search={{ admin: a.search }}
+                search={a.title == "Kelola Materi" && {admin: true}}
                 className="group rounded-2xl border border-line bg-tide/60 p-6 transition-colors hover:border-surf/50 hover:bg-tide"
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-surf/10 text-surf">
