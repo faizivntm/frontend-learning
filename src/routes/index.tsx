@@ -8,7 +8,7 @@ import { SectionHeading } from '@/components/molecules/SectionHeading'
 import { MaterialCard, MaterialCardSkeleton } from '@/components/molecules/MaterialCard'
 import { ProjectCard } from '@/components/molecules/ProjectCard'
 import { useMaterials } from '@/api/materials/useMaterials'
-import { sortedProjects } from '@/content/projects'
+import { featuredProjects } from '@/content/projects'
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -32,26 +32,33 @@ function Index() {
     for (const m of data ?? []) count.set(m.category, (count.get(m.category) ?? 0) + 1)
     return [...count.entries()].map(([name, total]) => ({ name, total }))
   }, [data])
-  const works = sortedProjects().slice(0, 3)
+  const works = featuredProjects().slice(0, 3)
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6">
       {/* Hero */}
       <section className="grid items-center gap-10 py-20 lg:grid-cols-2">
         <div>
-          <h1 className="text-5xl font-bold tracking-tight sm:text-6xl">
+          <p className="text-sm font-semibold uppercase tracking-wide text-surf">
+            Mobile &amp; Web Developer
+          </p>
+          <h1 className="mt-2 text-5xl font-bold tracking-tight sm:text-6xl">
             boy<span className="text-surf">Code</span>.
           </h1>
           <p className="mt-5 max-w-xl text-lg text-mist">
-          Dokumentasi pembelajaran gue, lu bisa belajar di sini kalau merasa butuh. Selain itu juga ada project coba-coba. Cobain deh!
+            Dokumentasi belajar &amp; coding gue — tempat gue nyatet dan berbagi hal
+            fundamental pemrograman. Sekaligus etalase karya yang pernah gue bangun.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link to="/materials">
-              <Button className="min-w-40">Penting</Button>
+              <Button className="min-w-40">Baca Materi</Button>
             </Link>
-            <Link to="/about">
-              <Button variant="secondary">Ga penting</Button>
+            <Link to="/projects">
+              <Button variant="secondary">Lihat Karya</Button>
             </Link>
+            <a href="/CV-Faiz-Ivan-Tama.pdf" download>
+              <Button variant="ghost">Download CV</Button>
+            </a>
           </div>
         </div>
 
@@ -132,8 +139,8 @@ function Index() {
         <section className="py-10 pb-20">
           <div className="flex items-end justify-between gap-4">
             <SectionHeading
-              title="Ngoprek yuk!"
-              subtitle="Template, boilerplate, dan project open-source. Ambil, modif, lalu bikin versi lu sendiri."
+              title="Karya pilihan"
+              subtitle="Dari aplikasi produksi sampai proyek AI ber-HAKI. Ini yang pernah gue bangun."
             />
             <Link
               to="/projects"
