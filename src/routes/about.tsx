@@ -2,12 +2,10 @@ import { createFileRoute } from '@tanstack/react-router'
 import {
   FaAward,
   FaBuilding,
-  FaDownload,
   FaEnvelope,
   FaGraduationCap,
   FaLinkedin,
   FaGithub,
-  FaWhatsapp,
 } from 'react-icons/fa6'
 import { SectionHeading } from '@/components/molecules/SectionHeading'
 import {KodeinLogo} from '@/components/atoms/KodeinLogo'
@@ -17,8 +15,6 @@ export const Route = createFileRoute('/about')({
   component: About,
 })
 
-const CV_URL = '/CV-Faiz-Ivan-Tama.pdf'
-
 const highlights = [
   { Icon: FaBuilding, label: 'Sekarang di', value: 'PT Circle K Indonesia Utama' },
   { Icon: FaAward, label: 'Karya', value: 'HAKI Terdaftar' },
@@ -27,7 +23,6 @@ const highlights = [
 
 const contacts = [
   { Icon: FaEnvelope, label: 'Email', href: 'mailto:faizivantama01@gmail.com' },
-  { Icon: FaWhatsapp, label: 'WhatsApp', href: 'https://wa.me/6285817818297' },
   { Icon: FaLinkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/faizivantama' },
   { Icon: FaGithub, label: 'GitHub', href: 'https://github.com/faizivntm' },
 ]
@@ -140,15 +135,14 @@ function About() {
       <div className="mt-14 rounded-2xl border border-line bg-tide/50 p-8 text-center">
         <h2 className="text-xl font-bold text-foam">Tertarik kerja bareng?</h2>
         <p className="mx-auto mt-2 max-w-md text-sm text-mist">
-          Terbuka untuk peluang full-time maupun freelance. Ambil CV-nya atau langsung sapa
-          gue lewat kanal di bawah.
+          Terbuka untuk peluang full-time maupun freelance. Langsung sapa gue lewat email
+          atau sosial media di bawah.
         </p>
         <a
-          href={CV_URL}
-          download
+          href="mailto:faizivantama01@gmail.com"
           className="mt-6 inline-flex items-center gap-2 rounded-lg bg-surf px-5 py-2.5 text-sm font-semibold text-abyss transition-colors hover:bg-surf-deep hover:text-foam"
         >
-          <FaDownload className="h-4 w-4" /> Download CV
+          <FaEnvelope className="h-4 w-4" /> Hire Me
         </a>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           {contacts.map((c) => (

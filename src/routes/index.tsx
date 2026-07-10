@@ -56,9 +56,6 @@ function Index() {
             <Link to="/projects">
               <Button variant="secondary">Lihat Karya</Button>
             </Link>
-            <a href="/CV-Faiz-Ivan-Tama.pdf" download>
-              <Button variant="ghost">Download CV</Button>
-            </a>
           </div>
         </div>
 
