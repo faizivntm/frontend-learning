@@ -47,6 +47,8 @@ export function MaterialForm({ initial }: { initial?: Material }) {
   const [slugTouched, setSlugTouched] = useState(isEdit)
   const [summary, setSummary] = useState(initial?.summary ?? '')
   const [category, setCategory] = useState(initial?.category ?? '')
+  const [series, setSeries] = useState(initial?.series ?? '')
+  const [order, setOrder] = useState(initial?.order?.toString() ?? '')
   const [date, setDate] = useState(initial?.date ?? today)
   const [tagsInput, setTagsInput] = useState((initial?.tags ?? []).join(', '))
   const [html, setHtml] = useState(initial ? blocksToHtml(initial.body) : '')
@@ -68,6 +70,8 @@ export function MaterialForm({ initial }: { initial?: Material }) {
     title,
     summary,
     category,
+    ...(series.trim() ? { series: series.trim() } : {}),
+    ...(order.trim() ? { order: Number(order) } : {}),
     date,
     ...(tags.length ? { tags } : {}),
     body,
@@ -92,6 +96,8 @@ export function MaterialForm({ initial }: { initial?: Material }) {
     setSlugTouched(false)
     setSummary('')
     setCategory('')
+    setSeries('')
+    setOrder('')
     setDate(today)
     setTagsInput('')
     setHtml('')
@@ -250,6 +256,28 @@ export function MaterialForm({ initial }: { initial?: Material }) {
                     className={field}
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
+                  />
+                </label>
+              </div>
+              <div className="grid grid-cols-[1fr_auto] gap-3">
+                <label className="flex flex-col gap-1.5 text-sm text-mist">
+                  Seri (opsional)
+                  <input
+                    className={field}
+                    value={series}
+                    onChange={(e) => setSeries(e.target.value)}
+                    placeholder="Java Fundamental"
+                  />
+                </label>
+                <label className="flex flex-col gap-1.5 text-sm text-mist">
+                  Urutan
+                  <input
+                    type="number"
+                    min={1}
+                    className={`${field} w-24`}
+                    value={order}
+                    onChange={(e) => setOrder(e.target.value)}
+                    placeholder="1"
                   />
                 </label>
               </div>

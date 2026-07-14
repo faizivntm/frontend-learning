@@ -19,6 +19,8 @@ export interface Material {
   title: string
   summary: string // 1–2 kalimat, muncul di kartu
   category: string // mis. "JavaScript", "Catatan", "Python"
+  series?: string // nama seri, buat mengelompokkan tutorial berurutan
+  order?: number // urutan dalam seri (1, 2, 3, …)
   date: string // format ISO: "2026-07-08"
   tags?: string[]
   body: Block[] // isi materi, disusun blok demi blok
