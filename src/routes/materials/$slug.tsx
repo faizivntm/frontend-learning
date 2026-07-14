@@ -3,6 +3,7 @@ import { createFileRoute, Link, useRouter } from '@tanstack/react-router'
 import { ContentBlocks } from '@/components/organisms/ContentBlocks'
 import { AdminTopbar } from '@/components/organisms/AdminTopbar'
 import { useMaterials } from '@/api/materials/useMaterials'
+import { seriesSiblings } from '@/content/materials'
 import { formatDate } from '@/lib/utils'
 
 export const Route = createFileRoute('/materials/$slug')({
@@ -19,6 +20,12 @@ function MaterialDetail() {
   const { data, isLoading, isError } = useMaterials()
 
   const material = data?.find((m) => m.slug === slug)
+
+  // Navigasi dalam seri: cari posisi materi ini di antara saudara sekurikulum.
+  const siblings = material ? seriesSiblings(data ?? [], material) : []
+  const idx = siblings.findIndex((m) => m.slug === slug)
+  const prev = idx > 0 ? siblings[idx - 1] : undefined
+  const next = idx >= 0 && idx < siblings.length - 1 ? siblings[idx + 1] : undefined
 
   // ponytail: native DOM API to set per-article title/description — avoids route loader refactor
   useEffect(() => {
@@ -68,6 +75,12 @@ function MaterialDetail() {
               <span className="border-2 border-line bg-surf px-2.5 py-1 font-bold text-foam">
                 {material.category}
               </span>
+              {material.series && (
+                <span className="border-2 border-line px-2.5 py-1 font-bold text-foam">
+                  {material.series}
+                  {material.order != null && ` · Bagian ${material.order}`}
+                </span>
+              )}
               <time dateTime={material.date}>{formatDate(material.date)}</time>
             </div>
             <h1 className="mt-4 break-words font-display text-4xl font-bold tracking-tight text-foam">
@@ -88,6 +101,36 @@ function MaterialDetail() {
           <div className="mt-8">
             <ContentBlocks blocks={material.body} />
           </div>
+
+          {/* Navigasi seri: lanjut ke bagian sebelumnya/berikutnya */}
+          {(prev || next) && (
+            <nav className="mt-12 grid gap-4 border-t-2 border-line pt-6 sm:grid-cols-2">
+              {prev ? (
+                <Link
+                  to="/materials/$slug"
+                  params={{ slug: prev.slug }}
+                  search={admin ? { admin: true } : {}}
+                  className="brutal brutal-press flex flex-col p-4"
+                >
+                  <span className="text-xs text-mist">← Sebelumnya</span>
+                  <span className="mt-1 font-bold text-foam">{prev.title}</span>
+                </Link>
+              ) : (
+                <span />
+              )}
+              {next && (
+                <Link
+                  to="/materials/$slug"
+                  params={{ slug: next.slug }}
+                  search={admin ? { admin: true } : {}}
+                  className="brutal brutal-press flex flex-col p-4 text-right sm:col-start-2"
+                >
+                  <span className="text-xs text-mist">Berikutnya →</span>
+                  <span className="mt-1 font-bold text-foam">{next.title}</span>
+                </Link>
+              )}
+            </nav>
+          )}
         </article>
       )}
     </>

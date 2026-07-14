@@ -8,7 +8,7 @@ import { MaterialCard, MaterialCardSkeleton } from '@/components/molecules/Mater
 import { ProjectCard } from '@/components/molecules/ProjectCard'
 import { useMaterials } from '@/api/materials/useMaterials'
 import { featuredProjects } from '@/content/projects'
-import { paths } from '@/content/paths'
+import { categories } from '@/content/materials'
 
 export const Route = createFileRoute('/')({
   head: () => ({
@@ -39,6 +39,7 @@ const stack = [
 function Index() {
   const { data, isLoading } = useMaterials()
   const latest = (data ?? []).slice(0, 4)
+  const cats = categories(data ?? [])
   const works = featuredProjects().slice(0, 3)
 
   return (
@@ -87,37 +88,38 @@ function Index() {
         </div>
       </section>
 
-      {/* Jalur Belajar */}
-      <section className="py-10">
-        <SectionHeading
-          title="Jalur Belajar"
-          subtitle="Bingung mulai dari mana? Ikutin jalur ini biar terarah, bukan loncat-loncat."
-        />
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {paths.map((p, i) => (
-            <Link
-              key={p.category}
-              to="/materials"
-              search={{ category: p.category }}
-              className="brutal brutal-press group flex flex-col p-6"
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-display text-3xl font-bold text-line/30">
-                  {String(i + 1).padStart(2, '0')}
+      {/* Kategori — dibangun dinamis dari materi yang ada */}
+      {cats.length > 0 && (
+        <section className="py-10">
+          <SectionHeading
+            title="Jelajah per Kategori"
+            subtitle="Bingung mulai dari mana? Pilih kategori yang menarik buat kamu."
+          />
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {cats.map((c, i) => (
+              <Link
+                key={c.name}
+                to="/materials"
+                search={{ category: c.name }}
+                className="brutal brutal-press group flex flex-col p-6"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-display text-3xl font-bold text-line/30">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <span className="border-2 border-line bg-abyss px-2 py-0.5 text-xs font-bold">
+                    {c.total} materi
+                  </span>
+                </div>
+                <h3 className="mt-3 font-display text-xl font-bold text-foam">{c.name}</h3>
+                <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-foam">
+                  Lihat materi <FaArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
                 </span>
-                <span className="border-2 border-line bg-abyss px-2 py-0.5 text-xs font-bold">
-                  {p.level}
-                </span>
-              </div>
-              <h3 className="mt-3 font-display text-xl font-bold text-foam">{p.title}</h3>
-              <p className="mt-1 text-sm text-mist">{p.description}</p>
-              <span className="mt-4 inline-flex items-center gap-2 text-sm font-bold text-foam">
-                Mulai jalur <FaArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
-              </span>
-            </Link>
-          ))}
-        </div>
-      </section>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Latest: materi terbaru */}
       <section className="py-10">

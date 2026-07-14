@@ -71,9 +71,50 @@ export const getMaterial = (slug: string) =>
 export const sortedMaterials = () =>
   [...materials].sort((a, b) => b.date.localeCompare(a.date))
 
-// Daftar kategori unik + jumlah materinya (buat section "Explore" di home).
-export const categories = () => {
+// Kelompokkan materi per seri. Di dalam satu seri diurut naik pakai `order`;
+// materi tanpa seri (series kosong) masuk grup null, diurut terbaru dulu.
+// Antar-grup diurut dari tanggal materi terbaru di grup itu.
+export interface SeriesGroup {
+  series: string | null
+  items: Material[]
+}
+
+export const groupBySeries = (list: Material[]): SeriesGroup[] => {
+  const map = new Map<string, Material[]>()
+  for (const m of list) {
+    const key = m.series ?? ''
+    const arr = map.get(key) ?? []
+    arr.push(m)
+    map.set(key, arr)
+  }
+  const latest = (items: Material[]) =>
+    items.reduce((d, m) => (m.date > d ? m.date : d), '')
+  return [...map.entries()]
+    .map(([series, items]) => ({
+      series: series || null,
+      items: series
+        ? [...items].sort(
+            (a, b) => (a.order ?? 0) - (b.order ?? 0) || a.date.localeCompare(b.date),
+          )
+        : [...items].sort((a, b) => b.date.localeCompare(a.date)),
+    }))
+    .sort((a, b) => latest(b.items).localeCompare(latest(a.items)))
+}
+
+// Materi lain dalam seri yang sama, urut naik pakai `order` (buat navigasi seri).
+export const seriesSiblings = (list: Material[], m: Material): Material[] =>
+  m.series
+    ? list
+        .filter((x) => x.series === m.series)
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0) || a.date.localeCompare(b.date))
+    : []
+
+// Daftar kategori unik + jumlah materinya (buat section kategori di home).
+// Urut dari yang paling banyak materinya.
+export const categories = (list: Material[]) => {
   const count = new Map<string, number>()
-  for (const m of materials) count.set(m.category, (count.get(m.category) ?? 0) + 1)
-  return [...count.entries()].map(([name, total]) => ({ name, total }))
+  for (const m of list) count.set(m.category, (count.get(m.category) ?? 0) + 1)
+  return [...count.entries()]
+    .map(([name, total]) => ({ name, total }))
+    .sort((a, b) => b.total - a.total)
 }
