@@ -1,0 +1,1 @@
+export { TrakteerFab } from './TrakteerFab'

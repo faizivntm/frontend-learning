@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { useRouterState } from '@tanstack/react-router'
 import { Header } from '@/components/organisms/Header'
 import { Footer } from '@/components/organisms/Footer'
+import { TrakteerFab } from '@/components/organisms/TrakteerFab'
 
 // Template: kerangka halaman (header + area konten + footer).
 // Polos (tanpa header/footer publik) untuk halaman /admin, ATAU saat dibuka
@@ -21,6 +22,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
       <Header />
       <main className="flex flex-1 flex-col">{children}</main>
       <Footer />
+      <TrakteerFab />
     </div>
   )
 }
